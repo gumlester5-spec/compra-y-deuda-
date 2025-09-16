@@ -71,7 +71,7 @@ const ChatBotPage = () => {
         // Actualiza el último mensaje en el historial con el texto acumulado
         setHistory(prev => {
           const newHistory = [...prev];
-          newHistory[new-History.length - 1].text = text;
+          newHistory[newHistory.length - 1].text = text;
           return newHistory;
         });
       }
