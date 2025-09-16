@@ -12,6 +12,17 @@ const GroupGate = ({ children }: { children: ReactNode }) => {
 
   // Efecto para limpiar el estado local cuando el usuario sale del grupo
   useEffect(() => {
+    // --- DEPURACIÓN TEMPORAL ---
+    // Esto mostrará los valores de las variables de entorno en la consola del navegador.
+    // Es muy importante quitar esto una vez que se solucione el problema.
+    console.log('--- DEBUG: Variables de Entorno ---')
+    console.log('Project ID:', import.meta.env.VITE_FIREBASE_PROJECT_ID)
+    console.log('Database URL:', import.meta.env.VITE_FIREBASE_DATABASE_URL)
+    console.log('API Key (Firebase):', import.meta.env.VITE_FIREBASE_API_KEY ? 'Existe' : 'NO EXISTE')
+    console.log('API Key (Gemini):', import.meta.env.VITE_GEMINI_API_KEY ? 'Existe' : 'NO EXISTE')
+    console.log('------------------------------------')
+    // --- FIN DEPURACIÓN TEMPORAL ---
+
     if (groupId === null) {
       // Si el groupId se vuelve nulo (logout), reseteamos los estados del gate
       setNewlyCreatedGroupId(null)
