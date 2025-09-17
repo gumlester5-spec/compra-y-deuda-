@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { type Debtor, addDebtor, deleteDebtor, updateDebtor, addHistoryLog, db } from '../db'
 import { FaEdit, FaTrash, FaCheck, FaPlus, FaTimes, FaSearch } from 'react-icons/fa'
 import { ref, onValue } from 'firebase/database'
@@ -197,29 +197,30 @@ const FiadoPage = () => {
   // Calculamos el total adeudado
   const totalDebt = debtors.reduce((sum, debtor) => sum + debtor.amount, 0)
 
-  // Agrupamos las deudas por cliente
-  const groupedDebts = debtors.reduce((acc, debt) => {
-    const clientName = debt.name;
-    if (!acc[clientName]) {
-      acc[clientName] = {
-        name: clientName,
-        totalAmount: 0,
-        debts: [],
-        lastDebtDate: 0
-      };
-    }
-    acc[clientName].debts.push(debt);
-    acc[clientName].totalAmount += debt.amount;
-    if (debt.date > acc[clientName].lastDebtDate) {
-      acc[clientName].lastDebtDate = debt.date;
-    }
-    return acc;
-  }, {} as Record<string, { name: string; totalAmount: number; debts: Debtor[]; lastDebtDate: number }>)
+  // Agrupamos, filtramos y ordenamos las deudas usando useMemo para optimización
+  const filteredAndSortedGroups = useMemo(() => {
+    const groupedDebts = debtors.reduce((acc, debt) => {
+      const clientName = debt.name;
+      if (!acc[clientName]) {
+        acc[clientName] = {
+          name: clientName,
+          totalAmount: 0,
+          debts: [],
+          lastDebtDate: 0
+        };
+      }
+      acc[clientName].debts.push(debt);
+      acc[clientName].totalAmount += debt.amount;
+      if (debt.date > acc[clientName].lastDebtDate) {
+        acc[clientName].lastDebtDate = debt.date;
+      }
+      return acc;
+    }, {} as Record<string, { name: string; totalAmount: number; debts: Debtor[]; lastDebtDate: number }>)
 
-  // Convertimos el objeto agrupado en un array y lo filtramos y ordenamos
-  const filteredAndSortedGroups = Object.values(groupedDebts)
-    .filter(group => group.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    .sort((a, b) => b.lastDebtDate - a.lastDebtDate)
+    return Object.values(groupedDebts)
+      .filter(group => group.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      .sort((a, b) => b.lastDebtDate - a.lastDebtDate)
+  }, [debtors, searchTerm])
 
   return (
     <div className="fiado-page-layout">

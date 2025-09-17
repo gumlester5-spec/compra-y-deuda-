@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { type HistoryLog, type HistoryAction, db } from '../db'
 import { FaPlus, FaEdit, FaTrash, FaCheck, FaBoxOpen, FaSearch } from 'react-icons/fa'
 import { useGroup } from '../context/GroupContext'
@@ -49,29 +49,23 @@ const HistorialPage = () => {
     return () => unsubscribe()
   }, [groupId])
 
-  const filteredLogs = logs.filter((log) => {
-    const message = log.message.toLowerCase()
-    const searchTermLower = searchTerm.toLowerCase()
+  const filteredLogs = useMemo(() => {
+    const filterKeywords: Record<FilterKey, string> = {
+      todos: '',
+      fiado: 'deuda',
+      compra: 'compra',
+      pedido: 'pedido',
+    };
+    const keyword = filterKeywords[activeFilter];
+    const searchTermLower = searchTerm.toLowerCase();
 
-    // 1. Filtrar por término de búsqueda
-    if (searchTermLower && !message.includes(searchTermLower)) {
-      return false
-    }
-
-    // 2. Filtrar por categoría
-    switch (activeFilter) {
-      case 'todos':
-        return true
-      case 'fiado':
-        return message.includes('deuda')
-      case 'compra':
-        return message.includes('compra')
-      case 'pedido':
-        return message.includes('pedido')
-      default:
-        return true
-    }
-  })
+    return logs.filter((log) => {
+      const message = log.message.toLowerCase();
+      const matchesSearch = !searchTermLower || message.includes(searchTermLower);
+      const matchesFilter = !keyword || message.includes(keyword);
+      return matchesSearch && matchesFilter;
+    });
+  }, [logs, searchTerm, activeFilter]);
 
   const filterOptions: Array<{ key: FilterKey, label: string }> = [
     { key: 'todos', label: 'Todos' },

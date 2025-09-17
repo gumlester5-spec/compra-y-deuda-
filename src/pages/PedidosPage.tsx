@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { type Order, addOrder, updateOrder, deleteOrder, addHistoryLog, db } from '../db'
 import { toast, type Toast } from 'react-hot-toast'
 import { ref, onValue } from 'firebase/database'
@@ -197,6 +197,27 @@ const PedidosPage = () => {
     setIsFormVisible(true)
   }
 
+  // Agrupamos, filtramos y ordenamos los pedidos usando useMemo para optimización
+  const filteredAndSortedGroups = useMemo(() => {
+    const groupedOrders = orders.reduce((acc, order) => {
+      const supplier = order.supplierName
+      if (!acc[supplier]) {
+        acc[supplier] = { name: supplier, orders: [], nearestArrival: new Date('2999-12-31'), totalAmount: 0 }
+      }
+      acc[supplier].orders.push(order)
+      acc[supplier].totalAmount += order.amount
+      if (new Date(order.arrivalDate) < acc[supplier].nearestArrival) {
+        acc[supplier].nearestArrival = new Date(order.arrivalDate)
+      }
+      return acc
+    }, {} as Record<string, { name: string, orders: Order[], nearestArrival: Date, totalAmount: number }>)
+
+    return Object.values(groupedOrders)
+      .filter((group) => group.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      .sort((a, b) => a.nearestArrival.getTime() - b.nearestArrival.getTime() || a.name.localeCompare(b.name));
+
+  }, [orders, searchTerm]);
+
 
   return (
     <>
@@ -267,22 +288,7 @@ const PedidosPage = () => {
             <p>No hay pedidos registrados.</p>
           ) : (
             <ul>
-              {Object.values(
-                orders.reduce((acc, order) => {
-                  const supplier = order.supplierName
-                  if (!acc[supplier]) {
-                    acc[supplier] = { name: supplier, orders: [], nearestArrival: new Date('2999-12-31'), totalAmount: 0 }
-                  }
-                  acc[supplier].orders.push(order)
-                  acc[supplier].totalAmount += order.amount
-                  if (new Date(order.arrivalDate) < acc[supplier].nearestArrival) {
-                    acc[supplier].nearestArrival = new Date(order.arrivalDate)
-                  }
-                  return acc
-                }, {} as Record<string, { name: string, orders: Order[], nearestArrival: Date, totalAmount: number }>),
-              )
-                .filter((group) => group.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                .sort((a, b) => a.nearestArrival.getTime() - b.nearestArrival.getTime() || a.name.localeCompare(b.name))
+              {filteredAndSortedGroups
                 .map((group) => (
                   <li key={group.name} className="client-group-item">
                     <details>
