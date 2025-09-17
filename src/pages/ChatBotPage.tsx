@@ -1,6 +1,5 @@
-import { FunctionDeclarationSchemaType } from '@google/generative-ai'
+import { FunctionDeclarationSchemaType, GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai'
 import { useState, useEffect, useRef } from 'react'
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { FaPaperPlane, FaRobot, FaUser } from 'react-icons/fa'
 import { toast } from 'react-hot-toast'
 import { useGroup } from '../context/GroupContext'
@@ -15,6 +14,27 @@ const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 if (!API_KEY) {
   throw new Error("La variable de entorno VITE_GEMINI_API_KEY no está definida.");
 }
+
+// Configuración de seguridad para hacer los filtros menos estrictos.
+// El valor por defecto puede ser muy sensible al contenido generado por usuarios (nombres, productos, etc).
+const safetySettings = [
+  {
+    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+  },
+];
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({
@@ -64,7 +84,8 @@ const model = genAI.getGenerativeModel({
         },
       },
     ],
-  }]
+  }],
+  safetySettings,
 });
 
 interface ChatMessage {
