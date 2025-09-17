@@ -92,31 +92,39 @@ const ChatBotPage = () => {
       { role: "model", parts: [{ text: "¡Hola! Soy FiadoBot. ¿En qué puedo ayudarte a gestionar tu tienda hoy?" }] },
     ];
 
+    const startFreshChat = () => {
+      console.log("Iniciando un nuevo chat, el historial anterior no era válido o no existía.");
+      chatRef.current = model.startChat({ history: initialPrompt });
+      setHistory([{ role: 'model', text: "¡Hola! Soy FiadoBot. ¿En qué puedo ayudarte a gestionar tu tienda hoy?" }]);
+      // Limpiamos cualquier historial potencialmente corrupto
+      localStorage.removeItem(`chatHistory_${groupId}`);
+    };
+
     try {
       const storedHistoryJson = localStorage.getItem(`chatHistory_${groupId}`);
       if (storedHistoryJson) {
         const storedModelHistory = JSON.parse(storedHistoryJson);
+
+        // Validamos que el historial no esté vacío o sea inválido
+        if (!Array.isArray(storedModelHistory) || storedModelHistory.length === 0) {
+          throw new Error("El historial almacenado está vacío o no es un array.");
+        }
+
         chatRef.current = model.startChat({ history: storedModelHistory });
 
         // Convierte el historial del modelo a un historial para la UI (omitiendo el prompt inicial)
         const uiHistory = storedModelHistory
           .filter((msg: any) => msg.role !== 'user' || !msg.parts[0]?.text?.startsWith('Eres un asistente'))
-          .map((msg: any) => ({
-            role: msg.role,
-            text: msg.parts?.map((p: any) => p.text || '').join('') || ''
-          })).filter((msg: ChatMessage) => msg.text.trim() !== ''); // Filtra mensajes vacíos
-        // Asegurarse de que el historial de la UI no esté vacío si solo quedaba el saludo
-        if (uiHistory.length > 0 && uiHistory[0].role === 'model') {
-          setHistory(uiHistory);
-        }
+          .map((msg: any) => ({ role: msg.role, text: msg.parts?.map((p: any) => p.text || '').join('') || '' }))
+          .filter((msg: ChatMessage) => msg.text.trim() !== '');
+
+        setHistory(uiHistory.length > 0 ? uiHistory : [{ role: 'model', text: "¡Hola! Soy FiadoBot. ¿En qué puedo ayudarte a gestionar tu tienda hoy?" }]);
       } else {
-        chatRef.current = model.startChat({ history: initialPrompt });
-        setHistory([{ role: 'model', text: "¡Hola! Soy FiadoBot. ¿En qué puedo ayudarte a gestionar tu tienda hoy?" }]);
+        startFreshChat();
       }
     } catch (error) {
       console.error("Error al cargar el historial del chat:", error);
-      chatRef.current = model.startChat({ history: initialPrompt });
-      setHistory([{ role: 'model', text: "¡Hola! Soy FiadoBot. ¿En qué puedo ayudarte a gestionar tu tienda hoy?" }]);
+      startFreshChat();
     }
   }, [groupId]);
 
