@@ -209,6 +209,8 @@ const PedidosPage = () => {
       if (new Date(order.arrivalDate) < acc[supplier].nearestArrival) {
         acc[supplier].nearestArrival = new Date(order.arrivalDate)
       }
+      // Ordenamos los pedidos dentro de cada grupo aquí
+      acc[supplier].orders.sort((a, b) => a.arrivalDate - b.arrivalDate);
       return acc
     }, {} as Record<string, { name: string, orders: Order[], nearestArrival: Date, totalAmount: number }>)
 
@@ -302,7 +304,7 @@ const PedidosPage = () => {
                         <span className="debtor-amount" translate="no">Q{group.totalAmount.toFixed(2)}</span>
                       </summary>
                       <div className="debt-details-list">
-                        {group.orders.sort((a, b) => a.arrivalDate - b.arrivalDate).map((order) => (
+                        {group.orders.map((order) => (
                           <div key={order.id} className="debt-detail-item">
                             <div className="order-details">
                               <span className="debtor-description">{order.products}</span>

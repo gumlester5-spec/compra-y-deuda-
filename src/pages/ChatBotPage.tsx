@@ -5,7 +5,7 @@ import { FaPaperPlane, FaRobot, FaUser } from 'react-icons/fa'
 import { toast } from 'react-hot-toast'
 import { useGroup } from '../context/GroupContext'
 import { db, type Debtor, type PurchaseItem, type Order, addDebtor, addPurchase, addOrder, addHistoryLog, type PurchasePriority } from '../db';
-import { ref, get } from 'firebase/database'
+import { ref, get, set } from 'firebase/database'
 
 // --- ¡ADVERTENCIA DE SEGURIDAD MUY IMPORTANTE! ---
 // NUNCA expongas tu API Key directamente en el código del cliente en una aplicación real.
@@ -80,52 +80,67 @@ const ChatBotPage = () => {
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const { groupId, userName } = useGroup()
-
-  // Carga el historial del chat desde localStorage o inicializa uno nuevo.
+  // Carga el historial del chat desde la base de datos o inicializa uno nuevo.
   useEffect(() => {
-    if (!groupId) return;
+    if (!groupId) {
+      setIsHistoryLoading(false);
+      return;
+    }
+
+    setIsHistoryLoading(true);
 
     const initialPrompt = [
-      { role: "user", parts: [{ text: "Eres un asistente amigable y útil para una aplicación de gestión de tiendas. Tu nombre es 'FiadoBot'. Ayuda a los usuarios con preguntas sobre la gestión de su inventario, deudas, compras y pedidos. Sé conciso y directo." }] },
-      { role: "model", parts: [{ text: "¡Hola! Soy FiadoBot. ¿En qué puedo ayudarte a gestionar tu tienda hoy?" }] },
+      { role: "user", parts: [{ text: "Eres un asistente amigable y útil para una aplicación de gestión de tiendas. Tu nombre es 'FiadoBot'. Ayuda a los usuarios con preguntas sobre la gestión de su inventario, deudas, compras y pedidos. Sé conciso y directo. Si te preguntan quién te creó, responde que fue Lester." }] },
+      { role: "model", parts: [{ text: "¡Hola! Soy FiadoBot. ¿En qué puedo ayudarte hoy?" }] },
     ];
 
-    const startFreshChat = () => {
+    const startFreshChat = async () => {
       console.log("Iniciando un nuevo chat, el historial anterior no era válido o no existía.");
       chatRef.current = model.startChat({ history: initialPrompt });
       setHistory([{ role: 'model', text: "¡Hola! Soy FiadoBot. ¿En qué puedo ayudarte a gestionar tu tienda hoy?" }]);
-      // Limpiamos cualquier historial potencialmente corrupto
-      localStorage.removeItem(`chatHistory_${groupId}`);
+      // Limpiamos cualquier historial potencialmente corrupto de la base de datos para empezar de cero.
+      if (groupId) {
+        const chatHistoryRef = ref(db, `groups/${groupId}/chatHistory`);
+        await set(chatHistoryRef, null).catch(err => console.error("No se pudo limpiar el historial de chat en nuestra base de datos:", err));
+      }
     };
 
-    try {
-      const storedHistoryJson = localStorage.getItem(`chatHistory_${groupId}`);
-      if (storedHistoryJson) {
-        const storedModelHistory = JSON.parse(storedHistoryJson);
+    const loadHistory = async () => {
+      try {
+        const chatHistoryRef = ref(db, `groups/${groupId}/chatHistory`);
+        const snapshot = await get(chatHistoryRef);
+        const storedModelHistory = snapshot.val();
 
-        // Validamos que el historial no esté vacío o sea inválido
-        if (!Array.isArray(storedModelHistory) || storedModelHistory.length === 0) {
-          throw new Error("El historial almacenado está vacío o no es un array.");
+        if (storedModelHistory) {
+          // Validamos que el historial no esté vacío o sea inválido
+          if (!Array.isArray(storedModelHistory) || storedModelHistory.length === 0) {
+            throw new Error("El historial almacenado está vacío o no es un array.");
+          }
+
+          chatRef.current = model.startChat({ history: storedModelHistory });
+
+          // Convierte el historial del modelo a un historial para la UI (omitiendo el prompt inicial)
+          const uiHistory = storedModelHistory
+            .filter((msg: any) => msg.role !== 'user' || !msg.parts[0]?.text?.startsWith('Eres un asistente'))
+            .map((msg: any) => ({ role: msg.role, text: msg.parts?.map((p: any) => p.text || '').join('') || '' }))
+            .filter((msg: ChatMessage) => msg.text.trim() !== '');
+
+          setHistory(uiHistory.length > 0 ? uiHistory : [{ role: 'model', text: "¡Hola! Soy FiadoBot. ¿En qué puedo ayudarte hoy?" }]);
+        } else {
+          await startFreshChat();
         }
-
-        chatRef.current = model.startChat({ history: storedModelHistory });
-
-        // Convierte el historial del modelo a un historial para la UI (omitiendo el prompt inicial)
-        const uiHistory = storedModelHistory
-          .filter((msg: any) => msg.role !== 'user' || !msg.parts[0]?.text?.startsWith('Eres un asistente'))
-          .map((msg: any) => ({ role: msg.role, text: msg.parts?.map((p: any) => p.text || '').join('') || '' }))
-          .filter((msg: ChatMessage) => msg.text.trim() !== '');
-
-        setHistory(uiHistory.length > 0 ? uiHistory : [{ role: 'model', text: "¡Hola! Soy FiadoBot. ¿En qué puedo ayudarte a gestionar tu tienda hoy?" }]);
-      } else {
-        startFreshChat();
+      } catch (error) {
+        console.error("Error al cargar el historial del chat desde nuestra base de datos:", error);
+        await startFreshChat();
+      } finally {
+        setIsHistoryLoading(false);
       }
-    } catch (error) {
-      console.error("Error al cargar el historial del chat:", error);
-      startFreshChat();
-    }
+    };
+
+    void loadHistory();
   }, [groupId]);
 
   // --- Implementación de las Herramientas ---
@@ -369,10 +384,11 @@ const ChatBotPage = () => {
         }
       }
       
-      // CORRECCIÓN 2: Guardar el historial actualizado en localStorage después de cada interacción.
+      // Guardar el historial actualizado en la base de datos después de cada interacción.
       if (chatRef.current && groupId) {
         const modelHistory = await chatRef.current.getHistory();
-        localStorage.setItem(`chatHistory_${groupId}`, JSON.stringify(modelHistory));
+        const chatHistoryRef = ref(db, `groups/${groupId}/chatHistory`);
+        await set(chatHistoryRef, modelHistory);
       }
     } catch (error) {
       console.error("Error al contactar a Gemini:", error);
@@ -397,16 +413,27 @@ const ChatBotPage = () => {
         <h2>Asistente Virtual</h2>
       </div>
       <div className="chatbot-history">
-        {history.map((msg, index) => (
-          <div key={index} className={`chat-message-wrapper ${msg.role}`}>
-            <div className="chat-avatar">
-              {msg.role === 'model' ? <FaRobot /> : <FaUser />}
+        {isHistoryLoading ? (
+          <div className="loading-container">
+            <div className="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-            <div className="chat-message">
-              <p>{msg.text}</p>
-            </div>
+            <p>Cargando historial...</p>
           </div>
-        ))}
+        ) : (
+          history.map((msg, index) => (
+            <div key={index} className={`chat-message-wrapper ${msg.role}`}>
+              <div className="chat-avatar">
+                {msg.role === 'model' ? <FaRobot /> : <FaUser />}
+              </div>
+              <div className="chat-message">
+                <p>{msg.text}</p>
+              </div>
+            </div>
+          ))
+        )}
         {isLoading && (
           <div className="chat-message-wrapper model">
             <div className="chat-avatar">

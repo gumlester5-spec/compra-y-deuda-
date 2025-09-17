@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { type PurchaseItem, addPurchase, updatePurchase, deletePurchase, addHistoryLog, type PurchasePriority, db } from '../db'
 import { toast, type Toast } from 'react-hot-toast'
 import { FaPlus, FaTimes, FaEdit, FaTrash, FaCheck, FaSearch } from 'react-icons/fa'
@@ -165,6 +165,25 @@ const ComprasPage = () => {
 
   const priorityOrder: Record<PurchasePriority, number> = { alta: 1, media: 2, baja: 3 }
 
+  const filteredAndSortedGroups = useMemo(() => {
+    const groupedItems = items.reduce((acc, item) => {
+      const supplierName = item.supplier
+      if (!acc[supplierName]) {
+        acc[supplierName] = { name: supplierName, items: [], highestPriority: 3 }
+      }
+      acc[supplierName].items.push(item)
+      const itemPriority = priorityOrder[item.priority]
+      if (itemPriority < acc[supplierName].highestPriority) {
+        acc[supplierName].highestPriority = itemPriority
+      }
+      return acc
+    }, {} as Record<string, { name: string, items: PurchaseItem[], highestPriority: number }>)
+
+    return Object.values(groupedItems)
+      .filter((group) => group.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      .sort((a, b) => a.highestPriority - b.highestPriority || a.name.localeCompare(b.name))
+  }, [items, searchTerm])
+
   return (
     <>
       {isFormVisible && (
@@ -223,26 +242,12 @@ const ComprasPage = () => {
 
         <div className="debt-list-scrollable">
           {items.length === 0 ? (
-            <p>No hay compras registradas.</p>
+            <p>No hay compras pendientes.</p>
+          ) : filteredAndSortedGroups.length === 0 ? (
+            <p>No se encontraron compras con ese criterio de búsqueda.</p>
           ) : (
             <ul>
-              {Object.values(
-                items.reduce((acc, item) => {
-                  const supplierName = item.supplier
-                  if (!acc[supplierName]) {
-                    acc[supplierName] = { name: supplierName, items: [], highestPriority: 3 }
-                  }
-                  acc[supplierName].items.push(item)
-                  const itemPriority = priorityOrder[item.priority]
-                  if (itemPriority < acc[supplierName].highestPriority) {
-                    acc[supplierName].highestPriority = itemPriority
-                  }
-                  return acc
-                }, {} as Record<string, { name: string, items: PurchaseItem[], highestPriority: number }>),
-              )
-                .filter((group) => group.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                .sort((a, b) => a.highestPriority - b.highestPriority || a.name.localeCompare(b.name))
-                .map((group) => (
+              {filteredAndSortedGroups.map((group) => (
                   <li key={group.name} className="client-group-item">
                     <details>
                       <summary className="client-summary" onClick={(e) => { if (e.target instanceof HTMLButtonElement) e.preventDefault() }}>
