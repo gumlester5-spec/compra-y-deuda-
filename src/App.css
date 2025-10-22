@@ -765,13 +765,21 @@ h1 {
 
 /* --- Estilos para la página de Notas --- */
 .note-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  border-radius: 8px;
   background-color: #fff59d; /* Amarillo post-it claro */
   color: #333;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  min-height: 150px; /* Asegura una altura mínima para tarjetas vacías */
 }
 
 /* Ajuste para el tema oscuro para mejorar la legibilidad */
 .dark-theme .note-card {
-  background-color: var(--card-bg-color);
+  background-color: #424242; /* Un amarillo oscuro para el tema oscuro */
   color: var(--text-color);
 }
 
