@@ -4,7 +4,7 @@ import FiadoPage from './pages/FiadoPage'
 import ComprasPage from './pages/ComprasPage'
 import PedidosPage from './pages/PedidosPage'
 import HistorialPage from './pages/HistorialPage'
-import ChatBotPage from './pages/ChatBotPage'
+import NotasPage from './pages/NotasPage'
 import Header from './components/Header'
 import GroupGate from './context/GroupGate'
 import { useSettings } from './context/SettingsContext'
@@ -23,7 +23,7 @@ const AppContent = () => {
           <Route path="/compras" element={<ComprasPage />} />
           <Route path="/pedidos" element={<PedidosPage />} />
           <Route path="/historial" element={<HistorialPage />} />
-          <Route path="/chatbot" element={<ChatBotPage />} />
+          <Route path="/notas" element={<NotasPage />} />
           <Route path="/" element={<Navigate to="/fiado" replace />} />
         </Routes>
       </main>

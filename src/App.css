@@ -62,7 +62,7 @@ h1 {
 .form-actions {
   display: flex;
   gap: 10px;
-  flex-direction: row-reverse; /* Pone el botón principal a la derecha */
+  justify-content: flex-end; /* Alinea los botones a la derecha */
 }
 
 .form-actions button {
@@ -614,34 +614,6 @@ h1 {
   z-index: 999;
 }
 
-.fab:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
-}
-
-/* --- Estilos para el Modal --- */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1001;
-}
-
-.modal-content {
-  background-color: var(--main-bg-color);
-  padding: 20px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -651,6 +623,11 @@ h1 {
 
 .modal-header h2 {
   margin: 0;
+}
+
+.fab:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
 }
 
 .close-button {
@@ -752,184 +729,201 @@ h1 {
   background-color: #c82333;
 }
 
-/* --- Estilos para la página del ChatBot --- */
-.chatbot-page {
-  display: flex;
-  flex-direction: column;
-  /* Rompemos el padding de <main> para ocupar toda la altura */
-  margin: -20px -20px -80px;
-  height: calc(100vh - 61px - 60px); /* vh - header - navbar. Ajusta si las alturas cambian */
-  background-color: var(--bg-color);
+/* --- Estilos para la nueva página de Notas --- */
+.notas-page {
+  width: 100%;
 }
 
-.chatbot-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 1rem 1.25rem; /* 20px */
-  border-bottom: 1px solid var(--border-color);
-  background-color: var(--main-bg-color);
-  flex-shrink: 0; /* Evita que se encoja */
-}
-
-.chatbot-header h2 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.chatbot-history {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
 }
 
-/* Contenedor para avatar y burbuja */
-.chat-message-wrapper {
-  display: flex;
-  gap: 10px;
-  max-width: 80%;
+.note-card:hover {
+  transform: scale(1.05);
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.15);
 }
 
-.chat-message-wrapper.user {
+.note-card small {
+  margin-top: 1rem;
   align-self: flex-end;
-  flex-direction: row-reverse; /* Pone el avatar a la derecha */
+  font-size: 0.75rem;
+  color: #888;
 }
 
-.chat-message-wrapper.model {
-  align-self: flex-start;
-}
-
-/* Avatar */
-.chat-avatar {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--card-bg-color);
-  border: 1px solid var(--border-color);
-  align-self: flex-end; /* Alinea el avatar con la parte inferior de la burbuja */
-}
-
-.chat-message-wrapper.user .chat-avatar {
-  background-color: #007bff;
-  color: white;
-  border: none;
-}
-
-/* Burbuja del mensaje */
-.chat-message {
-  padding: 10px 15px;
-  border-radius: 18px;
-  line-height: 1.5;
+/* Contenido de la nota para renderizar HTML */
+.note-content {
+  flex-grow: 1;
   word-wrap: break-word;
 }
 
-.chat-message p {
-  margin: 0;
+.note-content ul, .note-content ol {
+  padding-left: 20px;
+  margin-top: 0;
 }
 
-.chat-message-wrapper.user .chat-message {
-  background-color: #007bff;
-  color: white;
-  border-bottom-right-radius: 4px;
+/* --- Estilos para la página de Notas --- */
+.note-card {
+  background-color: #fff59d; /* Amarillo post-it claro */
+  color: #333;
 }
 
-.chat-message-wrapper.model .chat-message {
+/* Ajuste para el tema oscuro para mejorar la legibilidad */
+.dark-theme .note-card {
   background-color: var(--card-bg-color);
-  border: 1px solid var(--border-color);
-  border-bottom-left-radius: 4px;
+  color: var(--text-color);
 }
 
-.chatbot-input-area {
+/* Estilos para los items de checklist tachados */
+.note-content li.checked, .notas-modal-editor li.checked {
+  text-decoration: line-through;
+  color: var(--text-color-secondary);
+  transition: color 0.2s;
+}
+
+/* Nos aseguramos de que el checkbox en sí no se tache */
+.note-content li.checked input, .notas-modal-editor li.checked input {
+  text-decoration: none;
+}
+
+/* --- Estilos para el editor de notas en el modal --- */
+.editor-toolbar {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 1rem 1.25rem;
-  border-top: 1px solid var(--border-color);
+  gap: 5px;
+  padding: 8px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+}
+
+.editor-toolbar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px 8px;
+  border-radius: 4px;
+  color: var(--text-color-secondary);
+}
+
+.editor-toolbar button:hover {
+  background-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.editor-toolbar button.active {
+  background-color: var(--border-color);
+  color: #007bff;
+}
+
+.notas-modal-editor {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  border-radius: 0 0 6px 6px;
+  border: 1px solid var(--border-color);
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  min-height: 150px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  outline: none;
+}
+
+/* --- Estilos para la página de edición de notas --- */
+.nota-editor-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Altura mínima para ocupar siempre la pantalla */
+  width: 100%;
+  position: fixed; /* Lo sacamos del flujo normal */
+  top: 0;
+  left: 0;
   background-color: var(--main-bg-color);
+  z-index: 1000; /* Por encima de todo */
+  padding: 20px 20px 80px 20px; /* Añadimos padding inferior para que los botones no queden pegados abajo */
+  box-sizing: border-box;
+  overflow-y: auto; /* Habilitamos el scroll para toda la página */
+}
+
+.nota-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--main-bg-color); /* Fondo para que no se transparente al hacer scroll */
   flex-shrink: 0; /* Evita que se encoja */
 }
 
-.chatbot-input-area input {
-  flex-grow: 1;
-  padding: 12px 18px;
-  border-radius: 22px; /* Altura del botón / 2 */
+.nota-editor-header h2 {
+  margin: 0;
+}
+
+.nota-editor-page .editor-toolbar {
+  flex-shrink: 0; /* Evita que la barra de herramientas se encoja */
+  position: sticky; /* La mantenemos fija en la parte superior */
+  top: 0;
+  background-color: var(--main-bg-color);
+  z-index: 1; /* Asegura que esté sobre el área de texto al hacer scroll */
+  padding-top: 1rem; /* Espacio para que no se pegue al header */
+}
+
+.notas-editor-area {
+  flex-grow: 1; /* Ocupa todo el espacio vertical disponible */
+  overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+  padding: 15px;
   border: 1px solid var(--border-color);
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  font-size: 1rem;
-  transition: border-color 0.2s;
-}
-
-.chatbot-input-area input:focus {
+  border-radius: 6px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   outline: none;
-  border-color: #007bff;
+  background-color: var(--bg-color);
 }
 
-.chatbot-input-area button {
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  border: none;
+.nota-editor-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0; /* Evita que se encoja */
+}
+
+.nota-editor-actions .save-button {
   background-color: #007bff;
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s;
 }
 
-.chatbot-input-area button:hover:not(:disabled) {
-  background-color: #0056b3;
-}
-
-.chatbot-input-area button:disabled {
+.nota-editor-actions .cancel-button {
   background-color: #6c757d;
-  cursor: not-allowed;
+  color: white;
+}
+/* --- Estilos para el modal de notas en pantalla completa --- */
+.modal-content.notas-modal {
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
-/* Ajuste para pantallas pequeñas */
-@media (max-width: 480px) {
-  .chatbot-page {
-    margin: 0 0 -80px 0; /* En móvil, main no tiene padding lateral */
-    height: calc(100vh - 58px - 60px); /* Ajusta la altura del header en móvil */
-  }
+.modal-content.notas-modal .modal-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color);
 }
 
-/* --- Indicador de "escribiendo" --- */
-.typing-indicator {
+.modal-content.notas-modal .debt-form {
+  flex-grow: 1;
+  padding: 20px;
+  margin-bottom: 0;
+  overflow-y: auto;
+}
+
+/* Acciones del formulario de notas para evitar conflicto con .form-actions */
+.note-form-actions {
   display: flex;
-  align-items: center;
-  padding: 5px 0;
-}
-
-.typing-indicator span {
-  height: 8px;
-  width: 8px;
-  background-color: #9E9EA1;
-  border-radius: 50%;
-  display: inline-block;
-  margin: 0 2px;
-  animation: typing-bounce 1.3s infinite;
-}
-
-.typing-indicator span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-indicator span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes typing-bounce {
-  0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-6px); }
+  gap: 10px;
+  justify-content: flex-end; /* Alinea los botones a la derecha */
 }

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { FaBook, FaShoppingCart, FaBoxOpen, FaHistory, FaRobot } from 'react-icons/fa'
+import { FaBook, FaShoppingCart, FaBoxOpen, FaHistory, FaStickyNote } from 'react-icons/fa'
 import './BottomNav.css' // Reutilizamos los estilos existentes
 
 const navItems = [
@@ -7,7 +7,7 @@ const navItems = [
   { to: '/compras', icon: <FaShoppingCart />, label: 'Compras' },
   { to: '/pedidos', icon: <FaBoxOpen />, label: 'Pedidos' },
   { to: '/historial', icon: <FaHistory />, label: 'Historial' },
-  { to: '/chatbot', icon: <FaRobot />, label: 'Asistente' },
+  { to: '/notas', icon: <FaStickyNote />, label: 'Nota' },
 ]
 
 const Navbar = () => {

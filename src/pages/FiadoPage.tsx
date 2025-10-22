@@ -256,8 +256,8 @@ const FiadoPage = () => {
               <textarea placeholder="Producto/Descripción" value={description} onChange={(e) => setDescription(e.target.value)} required rows={2} className="debt-textarea" />
               <input type="number" placeholder="Monto total" value={amount} onChange={(e) => setAmount(e.target.value)} required step="0.01" min="0" />
               <div className="form-actions">
-                <button type="button" onClick={handleCloseForm} className="cancel-button">Cancelar</button>
                 <button type="submit">{editingDebtorId ? 'Guardar Cambios' : 'Agregar'}</button>
+                <button type="button" onClick={handleCloseForm} className="cancel-button">Cancelar</button>
               </div>
             </form>
           </div>

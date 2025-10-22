@@ -18,6 +18,8 @@ const Header = () => {
         return 'Gestión de Pedidos'
       case '/historial':
         return 'Historial de Actividad'
+      case '/notas':
+        return 'Bloc de Notas'
       default:
         return 'Control de Fiado'
     }

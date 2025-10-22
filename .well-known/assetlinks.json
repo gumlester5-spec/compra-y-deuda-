@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.netlify.compra_y_venta.twa",
+    "sha256_cert_fingerprints": [
+      "43:A1:A6:C6:FC:D1:3D:95:45:23:F9:73:B8:9B:47:46:E5:DB:68:94:02:7F:C1:05:9F:BC:19:D0:26:7F:A1:BE"
+    ]
+  }
+}]

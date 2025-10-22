@@ -217,8 +217,8 @@ const ComprasPage = () => {
               </div>
 
               <div className="form-actions">
-                <button type="button" onClick={handleCloseForm} className="cancel-button">Cancelar</button>
                 <button type="submit">{editingItemId ? 'Guardar Cambios' : 'Agregar'}</button>
+                <button type="button" onClick={handleCloseForm} className="cancel-button">Cancelar</button>
               </div>
             </form>
           </div>
