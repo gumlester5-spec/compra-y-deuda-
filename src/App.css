@@ -1,3 +1,15 @@
+/* --- Animación para Spinner --- */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner {
+  animation: spin 1.5s linear infinite;
+}
 /* --- Variables de Tamaño de Fuente --- */
 .font-size-pequeño {
   font-size: 14px;
@@ -18,6 +30,9 @@ body {
   padding: 20px;
   overscroll-behavior: none; /* Evita el rebote del scroll en PWAs */
   transition: background-color 0.2s, color 0.2s;
+  /* --- Deshabilitar el zoom --- */
+  touch-action: pan-x pan-y; /* Permite el scroll pero no el zoom por gestos */
+  height: 100%;
 }
 
 main {
@@ -57,6 +72,14 @@ h1 {
   flex-direction: column;
   gap: 10px;
   margin-bottom: 20px;
+}
+
+.debt-form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto; /* Habilita el scroll solo para esta parte */
+  padding: 5px 0; /* Pequeño espacio para que no se pegue */
 }
 
 .form-actions {
@@ -727,6 +750,101 @@ h1 {
 }
 .gate-button.delete:hover {
   background-color: #c82333;
+}
+
+/* --- Estilos para Modales --- */
+.modal-overlay {
+  position: fixed; /* Cubre toda la ventana */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  display: flex;
+  align-items: center; /* Centra verticalmente el contenido del modal */
+  justify-content: center; /* Centra horizontalmente el contenido del modal */
+  z-index: 1000; /* Asegura que esté por encima de todo */
+}
+
+.modal-content {
+  background-color: var(--main-bg-color);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex; /* Habilitamos flexbox */
+  flex-direction: column; /* Para apilar cabecera, cuerpo y pie */
+  width: 90%; /* Ocupa el 90% en móviles */
+  max-width: 500px; /* Pero no más de 500px en pantallas grandes */
+  max-height: 90vh; /* Altura máxima para el modal en móviles */
+  position: relative; /* Necesario para que el z-index funcione correctamente si hay otros elementos posicionados */
+  z-index: 1001; /* Asegura que el contenido del modal esté por encima del overlay */
+  overflow: hidden; /* Evita que el scroll del modal-content interfiera */
+}
+
+/* Ajustes para el formulario dentro del modal */
+.modal-content .debt-form {
+  margin-bottom: 0; /* Elimina el margen inferior si es el único contenido */
+}
+
+/* --- Estilos para Onboarding --- */
+.onboarding-overlay {
+  z-index: 2000; /* Asegura que esté por encima de todo */
+}
+
+.onboarding-content {
+  text-align: center;
+  max-width: 400px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.onboarding-icon {
+  color: #007bff;
+  margin-bottom: 0.5rem;
+}
+
+.dark-theme .onboarding-icon {
+  color: #3498db;
+}
+
+.onboarding-title {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.onboarding-description {
+  font-size: 1rem;
+  color: var(--text-color-secondary);
+  line-height: 1.5;
+  min-height: 60px; /* Evita que el modal cambie de tamaño bruscamente */
+}
+
+.onboarding-dots {
+  display: flex;
+  gap: 8px;
+  margin: 1rem 0;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--border-color);
+  transition: background-color 0.3s;
+}
+
+.dot.active {
+  background-color: #007bff;
+}
+
+.onboarding-actions {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
 }
 
 /* --- Estilos para la nueva página de Notas --- */

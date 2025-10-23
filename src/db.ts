@@ -44,11 +44,13 @@ export interface HistoryLog {
 
 // --- Funciones de Grupo ---
 
+const FIVE_MINUTES = 5 * 60 * 1000 // 5 minutos en milisegundos
+
 const generateGroupId = (): string => {
   return Math.floor(100000000 + Math.random() * 900000000).toString()
 }
 
-export const createGroup = async (userName: string): Promise<string> => {
+export const createGroup = async (userId: string, userName: string): Promise<string> => {
   let newGroupId: string
   let groupRef
   let snapshot
@@ -57,32 +59,42 @@ export const createGroup = async (userName: string): Promise<string> => {
   // Es extremadamente improbable que colisione, pero esto lo hace 100% seguro.
   do {
     newGroupId = generateGroupId()
-    groupRef = ref(db, `groups/${newGroupId}`)
+    // Apuntamos a 'members' para la comprobación, ya que es públicamente legible
+    // según tus reglas. Si no existe, la lectura dará null.
+    groupRef = ref(db, `groups/${newGroupId}/members`)
     snapshot = await get(groupRef)
   } while (snapshot.exists())
 
-  const groupData = {
+  // Paso 1: Asegurar la membresía.
+  // Escribimos en el nodo 'members' primero. La regla de seguridad lo permite.
+  const memberRef = ref(db, `groups/${newGroupId}/members/${userId}`)
+  // Usamos 'true' como valor simple para la membresía, como en tu ejemplo.
+  // Si prefieres guardar el nombre y la fecha, puedes usar el objeto comentado.
+  await set(memberRef, { name: userName, joinedAt: Date.now() })
+  // await set(memberRef, true)
+
+  // Paso 2: Escribir el resto de la información del grupo.
+  // Como el usuario ya es miembro, esta operación de 'update' será permitida.
+  const groupInfoRef = ref(db, `groups/${newGroupId}`) // Apuntamos a la raíz del grupo
+  await update(groupInfoRef, {
     info: {
       createdAt: Date.now(),
+      owner: userId,
     },
-  }
-
-  await set(groupRef, groupData)
-
-  const membersRef = ref(db, `groups/${newGroupId}/members`)
-  await set(push(membersRef), { name: userName })
+  })
 
   return newGroupId
 }
 
-export const joinGroup = async (groupId: string, userName: string): Promise<boolean> => {
-  const groupRef = ref(db, `groups/${groupId}`)
-  const snapshot = await get(groupRef)
+export const joinGroup = async (groupId: string, userId: string, userName: string): Promise<boolean> => {
+  // Apuntamos directamente a la lista de miembros para verificar si el grupo existe.
+  const groupMembersRef = ref(db, `groups/${groupId}/members`)
+  const snapshot = await get(groupMembersRef)
 
   if (snapshot.exists()) {
-    const membersRef = ref(db, `groups/${groupId}/members`)
-    const newMemberRef = push(membersRef)
-    await set(newMemberRef, { name: userName })
+    // Si el grupo existe, añadimos al nuevo usuario a la lista de miembros.
+    const newMemberRef = ref(db, `groups/${groupId}/members/${userId}`)
+    await set(newMemberRef, { name: userName, joinedAt: Date.now() })
     return true
   }
   return false
