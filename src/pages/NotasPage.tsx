@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useGroup } from '../context/GroupContext'
+import DOMPurify from 'dompurify'
 import { db } from '../db'
 import { ref, onValue, set, push, remove } from 'firebase/database'
 import { toast, type Toast } from 'react-hot-toast'
@@ -120,7 +121,8 @@ const NotasPage = () => {
   }
 
   const handleSaveNote = async () => {
-    const contentToSave = editorRef.current?.innerHTML || ''
+    // Sanitizamos el HTML antes de guardarlo para prevenir ataques XSS.
+    const contentToSave = DOMPurify.sanitize(editorRef.current?.innerHTML || '')
     if (!groupId) return toast.error('Debes estar en un grupo para guardar notas.')
     if (!contentToSave.trim()) return toast.error('La nota no puede estar vacía.')
 
@@ -287,7 +289,8 @@ const NotasPage = () => {
           <div className="notes-grid">
             {notes.length === 0 ? <p>No hay notas. ¡Añade la primera!</p> : notes.map(note => (
               <div key={note.id} className="note-card" onClick={() => handleOpenForm(note)}>
-                <div className="note-content" dangerouslySetInnerHTML={{ __html: note.content }} translate="no" />
+                {/* Aunque sanitizamos al guardar, es una buena práctica hacerlo también al renderizar como doble capa de seguridad. */}
+                <div className="note-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.content) }} translate="no" />
                 <small>{new Date(note.date).toLocaleDateString()}</small>
               </div>
             ))}

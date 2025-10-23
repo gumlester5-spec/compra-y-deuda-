@@ -41,7 +41,13 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts', // Archivo de configuración para las pruebas
-    threads: false, // Desactiva los hilos para evitar el timeout
+    pool: 'vmThreads',
+    poolOptions: {
+      vmThreads: {
+        useAtomics: true,
+        maxThreads: 1
+      }
+    },
     alias: {
       './firebase': '/src/__mocks__/firebase.ts',
     },
