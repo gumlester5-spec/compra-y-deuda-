@@ -3,7 +3,6 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -41,15 +40,10 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts', // Archivo de configuración para las pruebas
-    pool: 'vmThreads',
-    poolOptions: {
-      vmThreads: {
-        useAtomics: true,
-        maxThreads: 1
-      }
-    },
+    
+    // Re-agregamos el alias para que los tests usen el mock de Firebase
     alias: {
-      './firebase': '/src/__mocks__/firebase.ts',
+      './firebase': '/firebase.ts', // Apunta al mock en la raíz del proyecto
     },
   },
   resolve: {},

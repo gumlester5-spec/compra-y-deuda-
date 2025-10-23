@@ -44,8 +44,6 @@ export interface HistoryLog {
 
 // --- Funciones de Grupo ---
 
-const FIVE_MINUTES = 5 * 60 * 1000 // 5 minutos en milisegundos
-
 const generateGroupId = (): string => {
   return Math.floor(100000000 + Math.random() * 900000000).toString()
 }
