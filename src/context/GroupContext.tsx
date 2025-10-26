@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, type ReactNode, useEffect } from 'react'
-import { auth, db } from '../firebase'
+import { auth } from '../firebase'
 import { onAuthStateChanged, signInAnonymously, type User } from 'firebase/auth'
+import { db } from '../db'
 import { ref, get } from 'firebase/database'
 
 // 1. Definir la forma de los datos que compartirá el contexto
@@ -95,7 +96,7 @@ export const GroupProvider = ({ children }: { children: ReactNode }) => {
 // 4. Crear y EXPORTAR el custom hook `useGroup`.
 // Este es el hook que tus componentes usarán para acceder al contexto.
 export const useGroup = () => {
-  const context = useContext(GroupContext) as GroupContextType
+  const context = useContext(GroupContext)
   if (context === undefined) {
     throw new Error('useGroup debe ser usado dentro de un GroupProvider')
   }

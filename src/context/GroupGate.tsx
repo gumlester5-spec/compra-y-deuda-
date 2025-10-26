@@ -3,7 +3,6 @@ import { useGroup } from './GroupContext'
 import { createGroup, joinGroup } from '../db'
 import { toast } from 'react-hot-toast'
 import { FaCopy, FaArrowRight, FaSpinner } from 'react-icons/fa'
-import Onboarding from '../components/Onboarding'
 
 const GroupGate = ({ children }: { children: ReactNode }) => {
   const { groupId, userId, setGroupInfo, isLoading } = useGroup()
@@ -11,16 +10,6 @@ const GroupGate = ({ children }: { children: ReactNode }) => {
   const [inputUserName, setInputUserName] = useState('')
   const [newlyCreatedGroupId, setNewlyCreatedGroupId] = useState<string | null>(null)
   const [inputGroupId, setInputGroupId] = useState('')
-  const [showOnboarding, setShowOnboarding] = useState(false)
-
-  useEffect(() => {
-    // Comprobar si el usuario ya ha visto el onboarding
-    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding')
-    if (!hasSeenOnboarding) {
-      // Si no lo ha visto, mostramos la guía
-      setShowOnboarding(true)
-    }
-  }, [])
 
   // Efecto para limpiar el estado local cuando el usuario sale del grupo
   useEffect(() => {
