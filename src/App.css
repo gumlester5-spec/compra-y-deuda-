@@ -616,9 +616,34 @@ h1 {
 }
 
 /* --- Estilos para el Botón Flotante (FAB) --- */
+/* Botón principal (IA) */
 .fab {
   position: fixed;
   bottom: 80px; /* Justo encima de la barra de navegación */
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #524fa1; /* Un color distinto para la IA */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  padding: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  z-index: 999;
+  border: none;
+  text-decoration: none; /* Para que el Link no se vea subrayado */
+}
+
+/* Botón secundario (Agregar +) */
+.fab-secondary {
+  /* Hereda la mayoría de los estilos de .fab pero cambia la posición */
+  position: fixed;
+  bottom: 150px; /* Posición más arriba */
   right: 20px;
   width: 56px;
   height: 56px;
@@ -649,7 +674,7 @@ h1 {
 }
 
 .fab:hover {
-  background-color: #0056b3;
+  background-color: #403d7e;
   transform: scale(1.05);
 }
 
@@ -1052,4 +1077,100 @@ h1 {
   display: flex;
   gap: 10px;
   justify-content: flex-end; /* Alinea los botones a la derecha */
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 40px); /* Ocupa toda la altura menos el padding del body */
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: var(--main-bg-color);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--main-bg-color);
+}
+
+.page-header h1 {
+  font-size: 1.2rem;
+  margin: 0;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.back-button {
+  color: var(--text-color);
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chat-bubble {
+  padding: 0.75rem 1rem;
+  border-radius: 1.25rem;
+  max-width: 80%;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.chat-bubble.ai {
+  background-color: var(--card-bg-color);
+  align-self: flex-start;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.chat-bubble.user {
+  background-color: #007bff;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.chat-form {
+  display: flex;
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+  gap: 0.5rem;
+}
+
+.chat-form input {
+  flex-grow: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem;
+  font-size: 1rem;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.chat-form button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.chat-form button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
 }

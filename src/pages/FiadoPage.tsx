@@ -315,7 +315,7 @@ const FiadoPage = () => {
       )}
 
       {/* --- Botón Flotante --- */}
-      <button onClick={handleOpenForm} className="fab" aria-label="Agregar fiado">
+      <button onClick={handleOpenForm} className="fab-secondary" aria-label="Agregar fiado">
         <FaPlus />
       </button>
     </div>

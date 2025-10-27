@@ -295,7 +295,9 @@ const NotasPage = () => {
               </div>
             ))}
           </div>
-          <button onClick={() => handleOpenForm(null)} className="fab" aria-label="Agregar nota"><FaPlus /></button>
+          <button onClick={() => handleOpenForm(null)} className="fab-secondary" aria-label="Agregar nota">
+            <FaPlus />
+          </button>
         </>
       )}
     </div>

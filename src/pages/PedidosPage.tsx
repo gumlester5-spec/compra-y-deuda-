@@ -327,7 +327,7 @@ const PedidosPage = () => {
       </div>
 
       {/* --- Botón Flotante --- */}
-      <button onClick={handleOpenForm} className="fab" aria-label="Agregar pedido">
+      <button onClick={handleOpenForm} className="fab-secondary" aria-label="Agregar pedido">
         <FaPlus />
       </button>
     </>
