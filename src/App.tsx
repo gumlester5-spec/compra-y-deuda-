@@ -7,7 +7,7 @@ import HistorialPage from './pages/HistorialPage'
 import NotasPage from './pages/NotasPage'
 import AiChatPage from './pages/AiChatPage' // 1. Importar la página de chat
 import Header from './components/Header'
-import FloatingActionButton from './components/FloatingActionButton' // 2. Importar el botón flotante
+import GlobalChat from './components/GlobalChat' // 2. Importar el chat global
 import GroupGate from './context/GroupGate'
 import { useSettings } from './context/SettingsContext'
 import { Navigate, Route, Routes } from 'react-router-dom'
@@ -19,7 +19,7 @@ const AppContent = () => {
   return (
     <div className={`font-size-${fontSize}`}>
       {/* El botón flotante ahora se renderiza fuera del layout principal */}
-      <FloatingActionButton />
+      <GlobalChat />
       <Header />
       <main>
         <Routes>

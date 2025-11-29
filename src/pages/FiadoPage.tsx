@@ -21,6 +21,11 @@ const FiadoPage = () => {
   // Estado para saber si estamos añadiendo a un cliente existente
   const [addingToClientName, setAddingToClientName] = useState<string | null>(null)
 
+  // Estado para el modal de pago
+  const [paymentModalState, setPaymentModalState] = useState<{ isOpen: boolean; debtor: Debtor | null }>({ isOpen: false, debtor: null })
+  const [paymentAmount, setPaymentAmount] = useState('')
+  const [paymentType, setPaymentType] = useState<'full' | 'partial' | null>(null)
+
   const { groupId, userName } = useGroup()
 
   // Cargar los datos de IndexedDB cuando el componente se monta
@@ -129,34 +134,45 @@ const FiadoPage = () => {
     setAddingToClientName(null)
   }
 
-  const handleMarkAsPaid = (id: string) => {
-    toast(
-      (t: Toast) => (
-        <div className="toast-container">
-          <span>¿Marcar esta deuda como pagada?</span>
-          <div className="toast-buttons">
-            <button
-              className="toast-button confirm"
-              onClick={() => {
-                if (!groupId) return
-                const debtorToPay = debtors.find(d => d.id === id);
-                if (debtorToPay) {
-                  addHistoryLog(groupId, userName ?? 'Usuario', `pagó la deuda de "${debtorToPay.name}" por Q${debtorToPay.amount.toFixed(2)}.`, 'paid')
-                  handleDelete(id, false) // false para no pedir doble confirmación
-                }
-                toast.dismiss(t.id)
-              }}
-            >
-              Sí, pagar
-            </button>
-            <button className="toast-button cancel" onClick={() => toast.dismiss(t.id)}>
-              No
-            </button>
-          </div>
-        </div>
-      ),
-      { duration: 6000 }
-    )
+  const handleMarkAsPaid = (debtor: Debtor) => {
+    setPaymentModalState({ isOpen: true, debtor })
+    setPaymentType(null)
+    setPaymentAmount('')
+  }
+
+  const handleProcessPayment = async () => {
+    if (!paymentModalState.debtor || !groupId) return
+
+    if (paymentType === 'full') {
+      await deleteDebtor(groupId, paymentModalState.debtor.id)
+      await addHistoryLog(groupId, userName ?? 'Usuario', `pagó la deuda completa de "${paymentModalState.debtor.name}" por Q${paymentModalState.debtor.amount.toFixed(2)}.`, 'paid')
+      toast.success('Deuda pagada completamente')
+    } else if (paymentType === 'partial') {
+      const amountToPay = parseFloat(paymentAmount)
+      if (isNaN(amountToPay) || amountToPay <= 0) {
+        toast.error('Por favor ingresa un monto válido')
+        return
+      }
+      if (amountToPay >= paymentModalState.debtor.amount) {
+        toast.error('El abono no puede ser mayor o igual a la deuda total. Usa "Pago Completo".')
+        return
+      }
+
+      const newAmount = paymentModalState.debtor.amount - amountToPay
+      const updatedDebtor: Debtor = {
+        ...paymentModalState.debtor,
+        amount: newAmount,
+        date: Date.now() // Actualizamos fecha para que suba en la lista si se ordena por fecha
+      }
+
+      await updateDebtor(groupId, updatedDebtor)
+      await addHistoryLog(groupId, userName ?? 'Usuario', `abonó Q${amountToPay.toFixed(2)} a la deuda de "${paymentModalState.debtor.name}". Restante: Q${newAmount.toFixed(2)}`, 'edit')
+      toast.success(`Abono registrado. Restante: Q${newAmount.toFixed(2)}`)
+    }
+
+    setPaymentModalState({ isOpen: false, debtor: null })
+    setPaymentType(null)
+    setPaymentAmount('')
   }
 
   const handleDelete = async (id: string, withConfirmation = true) => {
@@ -266,6 +282,69 @@ const FiadoPage = () => {
         </div>
       }
 
+      {/* --- Modal de Pago --- */}
+      {paymentModalState.isOpen && paymentModalState.debtor && (
+        <div className="modal-overlay" onClick={() => setPaymentModalState({ isOpen: false, debtor: null })}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Registrar Pago</h2>
+              <button type="button" onClick={() => setPaymentModalState({ isOpen: false, debtor: null })} className="close-button">
+                <FaTimes />
+              </button>
+            </div>
+            <div className="debt-form-body">
+              <p>Deuda actual: <strong>Q{paymentModalState.debtor.amount.toFixed(2)}</strong></p>
+              <p>¿El cliente pagó la deuda completa o solo un abono?</p>
+
+              <div className="payment-options" style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+                <button
+                  type="button"
+                  className={`action-button ${paymentType === 'full' ? 'confirm' : ''}`}
+                  style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #ccc', background: paymentType === 'full' ? '#4caf50' : 'transparent', color: paymentType === 'full' ? 'white' : 'inherit' }}
+                  onClick={() => setPaymentType('full')}
+                >
+                  Pago Completo
+                </button>
+                <button
+                  type="button"
+                  className={`action-button ${paymentType === 'partial' ? 'confirm' : ''}`}
+                  style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #ccc', background: paymentType === 'partial' ? '#2196f3' : 'transparent', color: paymentType === 'partial' ? 'white' : 'inherit' }}
+                  onClick={() => setPaymentType('partial')}
+                >
+                  Solo un Abono
+                </button>
+              </div>
+
+              {paymentType === 'partial' && (
+                <div className="partial-payment-input">
+                  <label>Monto del abono:</label>
+                  <input
+                    type="number"
+                    placeholder="0.00"
+                    value={paymentAmount}
+                    onChange={(e) => setPaymentAmount(e.target.value)}
+                    step="0.01"
+                    min="0"
+                    autoFocus
+                  />
+                </div>
+              )}
+            </div>
+            <div className="form-actions">
+              <button type="button" onClick={() => setPaymentModalState({ isOpen: false, debtor: null })} className="cancel-button">Cancelar</button>
+              <button
+                type="button"
+                onClick={handleProcessPayment}
+                disabled={!paymentType || (paymentType === 'partial' && !paymentAmount)}
+                style={{ opacity: (!paymentType || (paymentType === 'partial' && !paymentAmount)) ? 0.5 : 1 }}
+              >
+                Confirmar Pago
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="debt-list-scrollable">
         {debtors.length === 0 ? (
           <p>No hay deudores registrados.</p>
@@ -293,9 +372,9 @@ const FiadoPage = () => {
                           <span className="debtor-date">{new Date(debt.date).toLocaleString()}</span>
                         </div>
                         <div className="item-actions">
-                           <button onClick={() => handleEdit(debt)} className="action-button edit" aria-label="Editar"><FaEdit /></button>
-                           <button onClick={() => handleMarkAsPaid(debt.id)} className="action-button paid" aria-label="Marcar como pagado"><FaCheck /></button>
-                           <button onClick={() => handleDelete(debt.id)} className="action-button delete" aria-label="Eliminar"><FaTrash /></button>
+                          <button onClick={() => handleEdit(debt)} className="action-button edit" aria-label="Editar"><FaEdit /></button>
+                          <button onClick={() => handleMarkAsPaid(debt)} className="action-button paid" aria-label="Marcar como pagado"><FaCheck /></button>
+                          <button onClick={() => handleDelete(debt.id)} className="action-button delete" aria-label="Eliminar"><FaTrash /></button>
                         </div>
                       </div>
                     ))}
