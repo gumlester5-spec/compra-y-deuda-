@@ -11,6 +11,7 @@ import GlobalChat from './components/GlobalChat' // 2. Importar el chat global
 import GroupGate from './context/GroupGate'
 import { useSettings } from './context/SettingsContext'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import ReloadPrompt from './ReloadPrompt'
 
 // Componente intermedio para poder usar el hook useSettings
 const AppContent = () => {
@@ -20,6 +21,7 @@ const AppContent = () => {
     <div className={`font-size-${fontSize}`}>
       {/* El botón flotante ahora se renderiza fuera del layout principal */}
       <GlobalChat />
+      <ReloadPrompt />
       <Header />
       <main>
         <Routes>
