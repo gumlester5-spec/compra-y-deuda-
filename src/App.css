@@ -3,20 +3,26 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
+
 .spinner {
   animation: spin 1.5s linear infinite;
 }
+
 /* --- Variables de Tamaño de Fuente --- */
 .font-size-pequeño {
   font-size: 14px;
 }
+
 .font-size-mediano {
-  font-size: 16px; /* Tamaño por defecto */
+  font-size: 16px;
+  /* Tamaño por defecto */
 }
+
 .font-size-grande {
   font-size: 18px;
 }
@@ -28,10 +34,12 @@ body {
   color: var(--text-color);
   margin: 0 auto;
   padding: 20px;
-  overscroll-behavior: none; /* Evita el rebote del scroll en PWAs */
+  overscroll-behavior: none;
+  /* Evita el rebote del scroll en PWAs */
   transition: background-color 0.2s, color 0.2s;
   /* --- Deshabilitar el zoom --- */
-  touch-action: pan-x pan-y; /* Permite el scroll pero no el zoom por gestos */
+  touch-action: pan-x pan-y;
+  /* Permite el scroll pero no el zoom por gestos */
   height: 100%;
 }
 
@@ -42,7 +50,8 @@ main {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px var(--shadow-color);
-  padding-bottom: 80px; /* Espacio para la barra de navegación */
+  padding-bottom: 80px;
+  /* Espacio para la barra de navegación */
   transition: background-color 0.2s;
 }
 
@@ -53,7 +62,9 @@ main {
   margin-bottom: 1rem;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   color: var(--text-color);
 }
 
@@ -78,18 +89,22 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow-y: auto; /* Habilita el scroll solo para esta parte */
-  padding: 5px 0; /* Pequeño espacio para que no se pegue */
+  overflow-y: auto;
+  /* Habilita el scroll solo para esta parte */
+  padding: 5px 0;
+  /* Pequeño espacio para que no se pegue */
 }
 
 .form-actions {
   display: flex;
   gap: 10px;
-  justify-content: flex-end; /* Alinea los botones a la derecha */
+  justify-content: flex-end;
+  /* Alinea los botones a la derecha */
 }
 
 .form-actions button {
-  flex-grow: 1; /* Hace que los botones ocupen el espacio disponible */
+  flex-grow: 1;
+  /* Hace que los botones ocupen el espacio disponible */
 }
 
 .debt-form input {
@@ -135,16 +150,19 @@ h1 {
 
 .debt-list li {
   display: flex;
-  flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea si no caben */
+  flex-wrap: wrap;
+  /* Permite que los elementos pasen a la siguiente línea si no caben */
   justify-content: space-between;
   align-items: center;
-  gap: 1rem; /* Espacio entre el nombre y el monto */
+  gap: 1rem;
+  /* Espacio entre el nombre y el monto */
   padding: 10px;
   border-bottom: 1px solid var(--border-color-light);
 }
 
 .debt-list li span:first-child {
-  word-break: break-word; /* Evita que texto muy largo rompa el diseño */
+  word-break: break-word;
+  /* Evita que texto muy largo rompa el diseño */
 }
 
 .debt-list li:last-child {
@@ -159,7 +177,8 @@ h1 {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 12px 18px;
-  margin: 16px 0 0; /* Ajuste de margen */
+  margin: 16px 0 0;
+  /* Ajuste de margen */
   font-size: 1.1rem;
   box-shadow: 0 1px 3px var(--shadow-color);
 }
@@ -177,7 +196,8 @@ h1 {
 /* Estilos para el buscador */
 .search-bar-container {
   margin-bottom: 20px;
-  position: relative; /* Para posicionar el ícono */
+  position: relative;
+  /* Para posicionar el ícono */
 }
 
 .search-icon {
@@ -186,17 +206,21 @@ h1 {
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-color-tertiary);
-  pointer-events: none; /* Para que no interfiera con el click en el input */
+  pointer-events: none;
+  /* Para que no interfiera con el click en el input */
 }
 
 .search-input {
   width: 100%;
-  padding: 10px 10px 10px 40px; /* Aumentamos el padding izquierdo para el ícono */
+  padding: 10px 10px 10px 40px;
+  /* Aumentamos el padding izquierdo para el ícono */
   border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 1rem;
-  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
-  background-color: var(--main-bg-color); /* Para que el input tenga el color de fondo correcto */
+  box-sizing: border-box;
+  /* Asegura que el padding no afecte el ancho total */
+  background-color: var(--main-bg-color);
+  /* Para que el input tenga el color de fondo correcto */
   color: var(--text-color);
   transition: border-color 0.2s, background-color 0.2s;
 }
@@ -208,7 +232,8 @@ h1 {
   /* Ocupa el alto disponible dentro de <main> */
   /* Se ajusta para ocupar el espacio restante dentro de <main>, 
      considerando el padding inferior para la barra de navegación. */
-  height: calc(100% - 1rem); /* 100% del espacio de <main> menos el margen del header */
+  height: calc(100% - 1rem);
+  /* 100% del espacio de <main> menos el margen del header */
 }
 
 .fiado-header-sticky {
@@ -217,14 +242,18 @@ h1 {
   background-color: var(--main-bg-color);
   z-index: 10;
   padding-bottom: 10px;
-  margin: 0 -20px; /* Compensa el padding de <main> */
+  margin: 0 -20px;
+  /* Compensa el padding de <main> */
   padding: 0 20px 10px;
 }
 
 .debt-list-scrollable {
-  flex-grow: 1; /* Ocupa el espacio restante */
-  overflow-y: auto; /* Habilita el scroll vertical */
-  padding-right: 5px; /* Espacio para la barra de scroll */
+  flex-grow: 1;
+  /* Ocupa el espacio restante */
+  overflow-y: auto;
+  /* Habilita el scroll vertical */
+  padding-right: 5px;
+  /* Espacio para la barra de scroll */
   margin-right: -5px;
 }
 
@@ -246,11 +275,13 @@ h1 {
   border-radius: 8px;
   margin-bottom: 1rem;
   box-shadow: 0 1px 3px var(--shadow-color);
-  overflow: hidden; /* Asegura que los bordes redondeados se apliquen a los hijos */
+  overflow: hidden;
+  /* Asegura que los bordes redondeados se apliquen a los hijos */
   padding: 0;
   flex-direction: column;
   align-items: stretch;
-  border-bottom: none; /* Sobrescribe el borde inferior de .debt-list li */
+  border-bottom: none;
+  /* Sobrescribe el borde inferior de .debt-list li */
 }
 
 .client-name-container {
@@ -269,11 +300,13 @@ h1 {
   align-items: center;
   padding: 15px 10px;
   cursor: pointer;
-  list-style: none; /* Oculta el marcador por defecto */
+  list-style: none;
+  /* Oculta el marcador por defecto */
 }
 
 .client-summary::-webkit-details-marker {
-  display: none; /* Oculta el marcador en Chrome/Safari */
+  display: none;
+  /* Oculta el marcador en Chrome/Safari */
 }
 
 .debt-details-list {
@@ -296,9 +329,11 @@ h1 {
 }
 
 /* Ajuste para que el item-content no sea necesario */
-.debtor-item { /* Este estilo ya no es el principal, pero lo mantenemos por si acaso */
+.debtor-item {
+  /* Este estilo ya no es el principal, pero lo mantenemos por si acaso */
   flex-direction: column;
-  align-items: stretch; /* Asegura que los hijos ocupen todo el ancho */
+  align-items: stretch;
+  /* Asegura que los hijos ocupen todo el ancho */
   gap: 12px;
 }
 
@@ -331,7 +366,8 @@ h1 {
 .debtor-amount {
   font-size: 1.1rem;
   font-weight: 500;
-  white-space: nowrap; /* Evita que el monto se parta en dos líneas */
+  white-space: nowrap;
+  /* Evita que el monto se parta en dos líneas */
 }
 
 .item-actions {
@@ -361,9 +397,17 @@ h1 {
   background-color: var(--bg-color);
 }
 
-.action-button.edit:hover { color: #007bff; }
-.action-button.paid:hover { color: #28a745; }
-.action-button.delete:hover { color: #dc3545; }
+.action-button.edit:hover {
+  color: #007bff;
+}
+
+.action-button.paid:hover {
+  color: #28a745;
+}
+
+.action-button.delete:hover {
+  color: #dc3545;
+}
 
 .action-button.add-to-client {
   width: 24px;
@@ -403,11 +447,25 @@ h1 {
   flex-shrink: 0;
 }
 
-.history-icon.add { color: #007bff; }
-.history-icon.edit { color: #ffc107; }
-.history-icon.delete { color: #dc3545; }
-.history-icon.paid { color: #28a745; }
-.history-icon.complete { color: #17a2b8; }
+.history-icon.add {
+  color: #007bff;
+}
+
+.history-icon.edit {
+  color: #ffc107;
+}
+
+.history-icon.delete {
+  color: #dc3545;
+}
+
+.history-icon.paid {
+  color: #28a745;
+}
+
+.history-icon.complete {
+  color: #17a2b8;
+}
 
 /* Filtros de Historial */
 .history-filters {
@@ -551,14 +609,14 @@ h1 {
   background-color: #007bff;
   color: #fff;
   font-weight: 600;
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilo genérico para botones activos en selectores (Configuración) */
 .priority-button.active {
   background-color: #007bff;
   color: #fff;
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilos para la prioridad en la lista de compras */
@@ -574,44 +632,56 @@ h1 {
 .priority-button.active {
   color: #fff;
   font-weight: 600;
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .priority-button.active.baja {
-  background-color: #28a745; /* Verde */
+  background-color: #28a745;
+  /* Verde */
 }
 
 .priority-button.active.media {
-  background-color: #ffc107; /* Amarillo */
+  background-color: #ffc107;
+  /* Amarillo */
   color: #212529;
 }
 
 .priority-button.active.alta {
-  background-color: #dc3545; /* Rojo */
+  background-color: #dc3545;
+  /* Rojo */
 }
 
 /* Colores para las etiquetas de prioridad en la lista */
 .priority-tag.baja {
-  background-color: #28a745; /* Verde */
+  background-color: #28a745;
+  /* Verde */
 }
+
 .priority-tag.media {
-  background-color: #ffc107; /* Amarillo */
+  background-color: #ffc107;
+  /* Amarillo */
   color: #212529;
 }
+
 .priority-tag.alta {
-  background-color: #dc3545; /* Rojo */
+  background-color: #dc3545;
+  /* Rojo */
 }
 
 /* --- Media Queries para Celulares --- */
 @media (max-width: 480px) {
   body {
-    padding: 0; /* Quitamos el padding en pantallas muy pequeñas */
+    padding: 0;
+    /* Quitamos el padding en pantallas muy pequeñas */
   }
+
   main {
-    border-radius: 0; /* Ocupa todo el ancho sin bordes redondeados */
+    border-radius: 0;
+    /* Ocupa todo el ancho sin bordes redondeados */
     box-shadow: none;
     padding: 15px;
-    padding-bottom: 80px; /* Mantenemos el espacio para la barra de navegación */
+    padding-bottom: 80px;
+    /* Mantenemos el espacio para la barra de navegación */
   }
 }
 
@@ -619,12 +689,14 @@ h1 {
 /* Botón principal (IA) */
 .fab {
   position: fixed;
-  bottom: 80px; /* Justo encima de la barra de navegación */
+  bottom: 80px;
+  /* Justo encima de la barra de navegación */
   right: 20px;
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background-color: #524fa1; /* Un color distinto para la IA */
+  background-color: #524fa1;
+  /* Un color distinto para la IA */
   color: white;
   display: flex;
   align-items: center;
@@ -636,14 +708,16 @@ h1 {
   transition: background-color 0.2s, transform 0.2s;
   z-index: 999;
   border: none;
-  text-decoration: none; /* Para que el Link no se vea subrayado */
+  text-decoration: none;
+  /* Para que el Link no se vea subrayado */
 }
 
 /* Botón secundario (Agregar +) */
 .fab-secondary {
   /* Hereda la mayoría de los estilos de .fab pero cambia la posición */
   position: fixed;
-  bottom: 150px; /* Posición más arriba */
+  bottom: 150px;
+  /* Posición más arriba */
   right: 20px;
   width: 56px;
   height: 56px;
@@ -773,22 +847,28 @@ h1 {
 .gate-button.delete {
   background-color: #dc3545;
 }
+
 .gate-button.delete:hover {
   background-color: #c82333;
 }
 
 /* --- Estilos para Modales --- */
 .modal-overlay {
-  position: fixed; /* Cubre toda la ventana */
+  position: fixed;
+  /* Cubre toda la ventana */
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Fondo semi-transparente */
   display: flex;
-  align-items: center; /* Centra verticalmente el contenido del modal */
-  justify-content: center; /* Centra horizontalmente el contenido del modal */
-  z-index: 1000; /* Asegura que esté por encima de todo */
+  align-items: center;
+  /* Centra verticalmente el contenido del modal */
+  justify-content: center;
+  /* Centra horizontalmente el contenido del modal */
+  z-index: 1000;
+  /* Asegura que esté por encima de todo */
 }
 
 .modal-content {
@@ -796,24 +876,34 @@ h1 {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  display: flex; /* Habilitamos flexbox */
-  flex-direction: column; /* Para apilar cabecera, cuerpo y pie */
-  width: 90%; /* Ocupa el 90% en móviles */
-  max-width: 500px; /* Pero no más de 500px en pantallas grandes */
-  max-height: 90vh; /* Altura máxima para el modal en móviles */
-  position: relative; /* Necesario para que el z-index funcione correctamente si hay otros elementos posicionados */
-  z-index: 1001; /* Asegura que el contenido del modal esté por encima del overlay */
-  overflow: hidden; /* Evita que el scroll del modal-content interfiera */
+  display: flex;
+  /* Habilitamos flexbox */
+  flex-direction: column;
+  /* Para apilar cabecera, cuerpo y pie */
+  width: 90%;
+  /* Ocupa el 90% en móviles */
+  max-width: 500px;
+  /* Pero no más de 500px en pantallas grandes */
+  max-height: 90vh;
+  /* Altura máxima para el modal en móviles */
+  position: relative;
+  /* Necesario para que el z-index funcione correctamente si hay otros elementos posicionados */
+  z-index: 1001;
+  /* Asegura que el contenido del modal esté por encima del overlay */
+  overflow: hidden;
+  /* Evita que el scroll del modal-content interfiera */
 }
 
 /* Ajustes para el formulario dentro del modal */
 .modal-content .debt-form {
-  margin-bottom: 0; /* Elimina el margen inferior si es el único contenido */
+  margin-bottom: 0;
+  /* Elimina el margen inferior si es el único contenido */
 }
 
 /* --- Estilos para Onboarding --- */
 .onboarding-overlay {
-  z-index: 2000; /* Asegura que esté por encima de todo */
+  z-index: 2000;
+  /* Asegura que esté por encima de todo */
 }
 
 .onboarding-content {
@@ -844,7 +934,8 @@ h1 {
   font-size: 1rem;
   color: var(--text-color-secondary);
   line-height: 1.5;
-  min-height: 60px; /* Evita que el modal cambie de tamaño bruscamente */
+  min-height: 60px;
+  /* Evita que el modal cambie de tamaño bruscamente */
 }
 
 .onboarding-dots {
@@ -885,7 +976,7 @@ h1 {
 
 .note-card:hover {
   transform: scale(1.05);
-  box-shadow: 4px 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .note-card small {
@@ -901,7 +992,8 @@ h1 {
   word-wrap: break-word;
 }
 
-.note-content ul, .note-content ol {
+.note-content ul,
+.note-content ol {
   padding-left: 20px;
   margin-top: 0;
 }
@@ -913,28 +1005,33 @@ h1 {
   justify-content: space-between;
   padding: 15px;
   border-radius: 8px;
-  background-color: #fff59d; /* Amarillo post-it claro */
+  background-color: #fff59d;
+  /* Amarillo post-it claro */
   color: #333;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  min-height: 150px; /* Asegura una altura mínima para tarjetas vacías */
+  min-height: 150px;
+  /* Asegura una altura mínima para tarjetas vacías */
 }
 
 /* Ajuste para el tema oscuro para mejorar la legibilidad */
 .dark-theme .note-card {
-  background-color: #424242; /* Un amarillo oscuro para el tema oscuro */
+  background-color: #424242;
+  /* Un amarillo oscuro para el tema oscuro */
   color: var(--text-color);
 }
 
 /* Estilos para los items de checklist tachados */
-.note-content li.checked, .notas-modal-editor li.checked {
+.note-content li.checked,
+.notas-modal-editor li.checked {
   text-decoration: line-through;
   color: var(--text-color-secondary);
   transition: color 0.2s;
 }
 
 /* Nos aseguramos de que el checkbox en sí no se tache */
-.note-content li.checked input, .notas-modal-editor li.checked input {
+.note-content li.checked input,
+.notas-modal-editor li.checked input {
   text-decoration: none;
 }
 
@@ -987,16 +1084,21 @@ h1 {
 .nota-editor-page {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Altura mínima para ocupar siempre la pantalla */
+  min-height: 100vh;
+  /* Altura mínima para ocupar siempre la pantalla */
   width: 100%;
-  position: fixed; /* Lo sacamos del flujo normal */
+  position: fixed;
+  /* Lo sacamos del flujo normal */
   top: 0;
   left: 0;
   background-color: var(--main-bg-color);
-  z-index: 1000; /* Por encima de todo */
-  padding: 20px 20px 80px 20px; /* Añadimos padding inferior para que los botones no queden pegados abajo */
+  z-index: 1000;
+  /* Por encima de todo */
+  padding: 20px 20px 80px 20px;
+  /* Añadimos padding inferior para que los botones no queden pegados abajo */
   box-sizing: border-box;
-  overflow-y: auto; /* Habilitamos el scroll para toda la página */
+  overflow-y: auto;
+  /* Habilitamos el scroll para toda la página */
 }
 
 .nota-editor-header {
@@ -1005,8 +1107,10 @@ h1 {
   align-items: center;
   padding-bottom: 15px;
   border-bottom: 1px solid var(--border-color);
-  background-color: var(--main-bg-color); /* Fondo para que no se transparente al hacer scroll */
-  flex-shrink: 0; /* Evita que se encoja */
+  background-color: var(--main-bg-color);
+  /* Fondo para que no se transparente al hacer scroll */
+  flex-shrink: 0;
+  /* Evita que se encoja */
 }
 
 .nota-editor-header h2 {
@@ -1014,17 +1118,23 @@ h1 {
 }
 
 .nota-editor-page .editor-toolbar {
-  flex-shrink: 0; /* Evita que la barra de herramientas se encoja */
-  position: sticky; /* La mantenemos fija en la parte superior */
+  flex-shrink: 0;
+  /* Evita que la barra de herramientas se encoja */
+  position: sticky;
+  /* La mantenemos fija en la parte superior */
   top: 0;
   background-color: var(--main-bg-color);
-  z-index: 1; /* Asegura que esté sobre el área de texto al hacer scroll */
-  padding-top: 1rem; /* Espacio para que no se pegue al header */
+  z-index: 1;
+  /* Asegura que esté sobre el área de texto al hacer scroll */
+  padding-top: 1rem;
+  /* Espacio para que no se pegue al header */
 }
 
 .notas-editor-area {
-  flex-grow: 1; /* Ocupa todo el espacio vertical disponible */
-  overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+  flex-grow: 1;
+  /* Ocupa todo el espacio vertical disponible */
+  overflow-y: auto;
+  /* Permite scroll si el contenido es muy largo */
   padding: 15px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -1037,7 +1147,8 @@ h1 {
 .nota-editor-actions {
   display: flex;
   gap: 10px;
-  flex-shrink: 0; /* Evita que se encoja */
+  flex-shrink: 0;
+  /* Evita que se encoja */
 }
 
 .nota-editor-actions .save-button {
@@ -1049,6 +1160,7 @@ h1 {
   background-color: #6c757d;
   color: white;
 }
+
 /* --- Estilos para el modal de notas en pantalla completa --- */
 .modal-content.notas-modal {
   width: 100%;
@@ -1076,13 +1188,15 @@ h1 {
 .note-form-actions {
   display: flex;
   gap: 10px;
-  justify-content: flex-end; /* Alinea los botones a la derecha */
+  justify-content: flex-end;
+  /* Alinea los botones a la derecha */
 }
 
 .page-container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 40px); /* Ocupa toda la altura menos el padding del body */
+  height: calc(100vh - 40px);
+  /* Ocupa toda la altura menos el padding del body */
   max-width: 600px;
   margin: 0 auto;
   background-color: var(--main-bg-color);
@@ -1139,6 +1253,55 @@ h1 {
   border-bottom-right-radius: 0.25rem;
 }
 
+.chat-bubble.ai {
+  background-color: var(--card-bg-color);
+  align-self: flex-start;
+  border-bottom-left-radius: 0.25rem;
+  padding-bottom: 2rem;
+  /* Espacio para el botón de copiar abajo */
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.chat-bubble.ai.active {
+  background-color: var(--border-color-light);
+  /* Feedback visual al tocar */
+}
+
+.copy-button {
+  position: absolute;
+  bottom: 5px;
+  /* Abajo */
+  right: 5px;
+  /* Derecha */
+  top: auto;
+  /* Reset top */
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  color: var(--text-color-secondary);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+  opacity: 0;
+  /* Invisible por defecto */
+}
+
+.chat-bubble.ai:hover .copy-button,
+.chat-bubble.ai.active .copy-button {
+  opacity: 1;
+  /* Visible al pasar el mouse o al estar activo (tap) */
+}
+
+.copy-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+}
+
+
 .chat-form {
   display: flex;
   padding: 1rem;
@@ -1173,4 +1336,37 @@ h1 {
 .chat-form button:disabled {
   background-color: #6c757d;
   cursor: not-allowed;
+}
+/* Override copy button styles */
+.copy-button {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  top: auto;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0,0,0,0.1);
+  color: var(--text-color);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s, background-color 0.2s, transform 0.1s;
+  opacity: 0;
+  z-index: 5;
+}
+
+.chat-bubble.ai:hover .copy-button,
+.chat-bubble.ai.active .copy-button {
+  opacity: 1;
+}
+
+.copy-button:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
+}
+
+.copy-button:active {
+  transform: scale(0.95);
 }
